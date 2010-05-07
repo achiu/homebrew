@@ -1,9 +1,9 @@
 require 'formula'
 
 class Libdnet <Formula
-  url 'http://prdownloads.sourceforge.net/libdnet/libdnet-1.11.tar.gz'
-  homepage 'http://libdnet.sourceforge.net/'
-  md5 '04c394ed8e1e7fc455456e79e908916'
+  url 'http://libdnet.googlecode.com/files/libdnet-1.12.tgz'
+  homepage 'http://code.google.com/p/libdnet/'
+  md5 '9253ef6de1b5e28e9c9a62b882e44cc9'
 
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking", "--prefix=#{prefix}"
