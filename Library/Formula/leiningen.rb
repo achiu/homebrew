@@ -1,15 +1,22 @@
 require 'formula'
 
 class Leiningen <Formula
-  url 'http://github.com/technomancy/leiningen/tarball/1.1.0'
+  url 'http://github.com/technomancy/leiningen/tarball/1.3.1'
+  head 'http://github.com/technomancy/leiningen.git', :using => :git
   homepage 'http://github.com/technomancy/leiningen'
-  md5 '96c542751e19816be4676a859e1734b6'
+  md5 '707fb0da7b89b44d9d37a9bac2bf3b3f'
 
   def install
-    system "bin/lein self-install"
-    prefix.install 'bin'
+    bin.install "bin/lein"
+    system "#{bin}/lein self-install"
 
     # Install the lein bash completion file
     (etc+'bash_completion.d').install 'bash_completion.bash' => 'lein-completion.bash'
+  end
+
+  def caveats; <<-EOS.undent
+    Standalone jar and dependencies installed to:
+      $HOME/.m2/repository
+    EOS
   end
 end

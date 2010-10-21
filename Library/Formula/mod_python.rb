@@ -6,7 +6,14 @@ class ModPython <Formula
   md5 'a3b0150176b726bd2833dac3a7837dc5'
 
   def caveats
-    " * You must manually edit /etc/apache2/httpd.conf to load mod_python.so"
+    <<-EOS.undent
+      To use mod_python, you must manually edit /etc/apache2/httpd.conf to load:
+        #{libexec}/mod_python.so
+
+      Note also that mod_python is deprecated, with mod_wsgi the recommended
+      replacement. See:
+        http://blog.dscpl.com.au/2010/05/modpython-project-soon-to-be-officially.html
+    EOS
   end
 
   def patches
@@ -16,7 +23,7 @@ class ModPython <Formula
 
   def install
     system "./configure", "--prefix=#{prefix}", "--disable-debug", "--disable-dependency-tracking"
-    
+
     # Explicitly set the arch in CFLAGS so the PSPModule will build against system Python
     # We remove 'ppc' support, so we can pass Intel-optimized CFLAGS.
     archs = archs_for_command("python")

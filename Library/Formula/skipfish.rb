@@ -1,9 +1,9 @@
 require 'formula'
 
 class Skipfish <Formula
-  url 'http://skipfish.googlecode.com/files/skipfish-1.34b.tgz'
+  url 'http://skipfish.googlecode.com/files/skipfish-1.69b.tgz'
   homepage 'http://code.google.com/p/skipfish/'
-  md5 'b988a2d8ddbef7c3cbecbbafd2ec7269'
+  md5 'ece789b885014208a760138354d972c3'
 
   depends_on 'libidn'
 
@@ -15,13 +15,11 @@ class Skipfish <Formula
       "#define ASSETS_DIR	       \"#{libexec}/assets\""
     system "make"
     bin.install "skipfish"
-    (libexec+"dictionaries").install Dir["dictionaries/*"]
-    (libexec+"assets").install Dir["assets/*"]
+    libexec.install ["dictionaries", "assets"]
   end
 
   def caveats; <<-EOS.undent
-
-    NOTE: Skipfish uses dictionary-based probes and will not run until 
+    NOTE: Skipfish uses dictionary-based probes and will not run until
     you have specified a dictionary for it to use.
 
     Please read #{libexec}/dictionaries/README-FIRST
@@ -29,7 +27,6 @@ class Skipfish <Formula
     on the quality of results later on.
 
     "skipfish -h" prints out usage information.
-
     EOS
   end
 end

@@ -1,9 +1,16 @@
 require 'formula'
 
 class Cmake <Formula
-  url 'http://www.cmake.org/files/v2.8/cmake-2.8.1.tar.gz'
-  md5 'feadc2e5ebbfed0efc90178583503725'
+  url 'http://www.cmake.org/files/v2.8/cmake-2.8.2.tar.gz'
+  md5 '8c967d5264657a798f22ee23976ff0d9'
   homepage 'http://www.cmake.org/'
+
+  def patches
+    # CMAKE_OSX_ARCHITECTURES quoting bug. See: http://www.vtk.org/Bug/view.php?id=11244
+    # Not needed with CMake 2.8.3 and above.
+    [ "http://cmake.org/gitweb?p=cmake.git;a=patch;h=a8ded533",
+      "http://cmake.org/gitweb?p=cmake.git;a=patch;h=0790af3b" ]
+  end
 
   def install
     # xmlrpc is a stupid little library, rather than waste our users' time
@@ -18,7 +25,8 @@ class Cmake <Formula
                           "--datadir=/share/cmake",
                           "--docdir=/share/doc/cmake",
                           "--mandir=/share/man"
-    system "make" # Separate steps, or compile fails on Mac Pro
+    ENV.j1 # There appear to be parallelism issues.
+    system "make"
     system "make install"
   end
 end

@@ -5,12 +5,10 @@ class Texinfo <Formula
   homepage 'http://www.gnu.org/software/texinfo/'
   md5 '71ba711519209b5fb583fed2b3d86fcb'
 
-  def keg_only?
-    :provided_by_osx
-  end
+  keg_only :provided_by_osx
 
   def install
-    system "./configure", "--disable-debug", "--disable-dependency-tracking",
+    system "./configure", "--disable-dependency-tracking",
                           "--disable-install-warnings",
                           "--prefix=#{prefix}"
     system "make install"

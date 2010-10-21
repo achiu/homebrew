@@ -10,18 +10,29 @@ require 'formula'
 # * gdbm
 
 class GnuSmalltalk <Formula
-  url 'ftp://ftp.gnu.org/gnu/smalltalk/smalltalk-3.2.tar.gz'
+  url 'ftp://ftp.gnu.org/gnu/smalltalk/smalltalk-3.2.2.tar.gz'
   homepage 'http://smalltalk.gnu.org/'
-  sha1 'd951714c4fc7d91d06bdc33c20905885e5d2b25f'
+  sha1 'a985d69e4760420614c9dfe4d3605e47c5eb8faa'
 
-  # depends_on 'gmp' => :optional # 32/64 built build problems
+  # 'gmp' is an optional dep, it is built 64-bit on Snow Leopard
+  # (and this brew is forced to build in 32-bit mode.)
 
   def install
-    # Codegen problems with LLVM
-    ENV.gcc_4_2
+    fails_with_llvm "Codegen problems with LLVM"
 
     # 64-bit version doesn't build, so force 32 bits.
     ENV.m32
+
+    if snow_leopard_64? and Formula.factory('gdbm').installed?
+      onoe "A 64-bit gdbm will cause linker errors"
+      puts <<-EOS.undent
+        GNU Smalltak doesn't compile 64-bit clean on OS X, so having a
+        64-bit gdbm installed will break linking you may want to do:
+          $ brew unlink gdbm
+          $ brew install gnu-smalltalk
+          $ brew link gdbm
+      EOS
+    end
 
     # GNU Smalltalk thinks it needs GNU awk, but it works fine
     # with OS X awk, so let's trick configure.
@@ -30,8 +41,8 @@ class GnuSmalltalk <Formula
     ENV['AWK'] = "#{here}/gawk"
 
     ENV['FFI_CFLAGS'] = '-I/usr/include/ffi'
-    system "./configure", "--prefix=#{prefix}", "--disable-debug", 
-                          "--disable-dependency-tracking",
+    system "./configure", "--disable-debug", "--disable-dependency-tracking",
+                          "--prefix=#{prefix}",
                           "--with-readline=/usr/lib"
     system "make"
     ENV.j1 # Parallel install doesn't work
